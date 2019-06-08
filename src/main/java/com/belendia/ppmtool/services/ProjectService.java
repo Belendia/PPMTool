@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.belendia.ppmtool.domain.Project;
+import com.belendia.ppmtool.exceptions.ProjectIdentifierException;
 import com.belendia.ppmtool.repositories.ProjectRepository;
 
 @Service
@@ -14,6 +15,12 @@ public class ProjectService {
 	
 	public Project saveOrUpdateProject(Project project) {
 		
-		return projectRepository.save(project);
+		try {
+			project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
+			return projectRepository.save(project);
+		} catch (Exception e) {
+			throw new ProjectIdentifierException("Project Identifier '" + project.getProjectIdentifier() + "' already exists");
+		}
+		
 	}
 }
