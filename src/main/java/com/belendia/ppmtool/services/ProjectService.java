@@ -23,7 +23,7 @@ public class ProjectService {
 		try {
 			project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
 			
-			if(project.getId() == null) {
+			if(project.getId() == null) { // if we are just creating project, create backlog for it as well.
 				Backlog backlog = new Backlog();
 				//set the relationship
 				project.setBacklog(backlog);

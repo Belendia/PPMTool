@@ -16,6 +16,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Project {
@@ -49,6 +50,7 @@ public class Project {
 	private Date updated_At;
 	
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project")
+	@JsonIgnore //if we have a lot of project task under a backlog, the JSON data will be huge in size. This will make downloading difficult.
 	private Backlog backlog;
 	
 	
