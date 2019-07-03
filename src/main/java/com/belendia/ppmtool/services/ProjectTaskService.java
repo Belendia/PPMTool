@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.belendia.ppmtool.domain.Backlog;
 import com.belendia.ppmtool.domain.ProjectTask;
+import com.belendia.ppmtool.exceptions.ProjectNotFoundException;
 import com.belendia.ppmtool.repositories.BacklogRepository;
 import com.belendia.ppmtool.repositories.ProjectTaskRepository;
 
@@ -16,11 +17,15 @@ public class ProjectTaskService {
 	@Autowired
 	private ProjectTaskRepository projectTaskRepository;
 	
+	
 	public ProjectTask addProjectTask(String projectIdentifier, ProjectTask projectTask) {
-		// Exceptions: Project not found
 		
 		//ProjectTasks to be added to a specific project, project != null, if projects are not null, then the backlogs exists
 		Backlog backlog = backlogRepository.findByProjectIdentifier(projectIdentifier);
+		
+		if(backlog == null) {
+			throw new ProjectNotFoundException("Project Not Found");
+		}
 		
 		//Set the backlog to the ProjectTask
 		projectTask.setBacklog(backlog);
@@ -50,6 +55,13 @@ public class ProjectTaskService {
 	}
 
 	public Iterable<ProjectTask> findBacklogById(String backlog_id) {
+		//if the backlog doesn't exist implies that the project doesn't exist
+		Backlog backlog = backlogRepository.findByProjectIdentifier(backlog_id);
+		
+		if(backlog == null) {
+			throw new ProjectNotFoundException("Project with ID: '" + backlog_id +  "' does not exist");
+		}
+				
 		
 		return projectTaskRepository.findByProjectIdentifierOrderByPriority(backlog_id);
 	}

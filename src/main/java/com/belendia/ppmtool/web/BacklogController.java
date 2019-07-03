@@ -1,7 +1,5 @@
 package com.belendia.ppmtool.web;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +44,6 @@ public class BacklogController {
 	
 	@GetMapping("/{backlog_id}")
 	public Iterable<ProjectTask> getProjectBacklog(@PathVariable String backlog_id) {
-		System.out.println("HI");
 		return projectTaskService.findBacklogById(backlog_id);
 	}
 	
