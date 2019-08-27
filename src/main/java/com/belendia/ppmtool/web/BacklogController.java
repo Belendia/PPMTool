@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,6 +47,31 @@ public class BacklogController {
 	@GetMapping("/{backlog_id}")
 	public Iterable<ProjectTask> getProjectBacklog(@PathVariable String backlog_id) {
 		return projectTaskService.findBacklogById(backlog_id);
+	}
+	
+	@GetMapping("/{backlog_id}/{project_task_id}")
+	public ResponseEntity<?> getProjectTask(@PathVariable String backlog_id, @PathVariable String project_task_id) {
+		ProjectTask projectTask = projectTaskService.findProjectByProjectSequence(backlog_id, project_task_id);
+		return new ResponseEntity<ProjectTask>(projectTask, HttpStatus.OK);
+		
+	}
+	
+	@PatchMapping("/{backlogId}/{projectTaskId}")
+	public ResponseEntity<?> updateProjectTask(@Valid @RequestBody ProjectTask projectTask, BindingResult result, 
+											   @PathVariable String backlogId, @PathVariable String projectTaskId) {
+		ResponseEntity<?> errMap = mapValidationErrorService.MapValidationService(result);
+		if(errMap != null) return errMap;
+		
+		ProjectTask updatedProjectTask = projectTaskService.updateByProjectSequence(projectTask, backlogId, projectTaskId);
+		
+		return new ResponseEntity<ProjectTask>(updatedProjectTask, HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/{backlogId}/{projectTaskId}")
+	public ResponseEntity<?> deleteProjectTask(@PathVariable String backlogId, @PathVariable String projectTaskId) {
+		projectTaskService.deleteProjectTaskByProjectSequence(backlogId, projectTaskId);
+		
+		return new ResponseEntity<String>("Project Task " + projectTaskId + " was deleted successfully", HttpStatus.OK);
 	}
 	
 }
