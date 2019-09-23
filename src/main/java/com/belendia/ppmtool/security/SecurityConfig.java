@@ -18,11 +18,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
-	private JwtAuthenticationEntryPoint unauthorizedHandler;
+	private JwtAuthenticationEntryPoint unauthorizedHandler; // To show nicely formated message for unauthenticated users
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable()
+			// To show nicely formated message for unauthenticated users
 			.exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
 			.and()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -41,6 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 					"/**/*.css",
 					"/**/*.js"
 					).permitAll()
+			.antMatchers("/api/users/**").permitAll()
 			.anyRequest().authenticated();
 	}
 	

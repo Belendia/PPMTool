@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import com.belendia.ppmtool.exceptions.InvalidLoginResponse;
 import com.google.gson.Gson;
 
-// good message for unauthenticated users
+// To show nicely formated message for unauthenticated users
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
