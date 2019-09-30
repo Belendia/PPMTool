@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -53,6 +54,11 @@ public class Project {
 	@JsonIgnore //if we have a lot of project task under a backlog, the JSON data will be huge in size. This will make downloading difficult.
 	private Backlog backlog;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	private User user;
+	
+	private String projectLeader;
 	
 	public Project() {
 		
@@ -61,7 +67,6 @@ public class Project {
 	public Long getId() {
 		return id;
 	}
-
 
 	public void setId(Long id) {
 		this.id = id;
@@ -153,4 +158,21 @@ public class Project {
 	protected void onUpdate() {
 		this.setUpdated_At( new Date() );
 	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public String getProjectLeader() {
+		return projectLeader;
+	}
+
+	public void setProjectLeader(String projectLeader) {
+		this.projectLeader = projectLeader;
+	}
+	
 }

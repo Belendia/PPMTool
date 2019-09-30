@@ -1,5 +1,7 @@
 package com.belendia.ppmtool.web;
 
+import java.security.Principal;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,33 +33,33 @@ public class ProjectController {
 	private MapValidationErrorService mapValidationErrorService;
 	
 	@PostMapping
-	public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result) {
+	public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result, Principal principal) {
 	
 		ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
 		if(errorMap !=null) return errorMap;
 		
-		Project proj = projectService.saveOrUpdateProject(project);
+		Project proj = projectService.saveOrUpdateProject(project, principal.getName());
 		return new ResponseEntity<Project>(proj, HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/{projectId}")
-	public ResponseEntity<?> getProjectId(@PathVariable String projectId) {
+	public ResponseEntity<?> getProjectById(@PathVariable String projectId, Principal principal) {
 		
-		Project project = projectService.findProjectByIdentifier(projectId);
+		Project project = projectService.findProjectByIdentifier(projectId, principal.getName());
 		
 		return new ResponseEntity<Project>(project, HttpStatus.OK) ;
 		
 	}
 	
 	@GetMapping
-	public Iterable<Project> getProjects() {
-		return projectService.findAllProjects();
+	public Iterable<Project> getProjects(Principal principal) {
+		return projectService.findAllProjects(principal.getName());
 	}
 	
 	@DeleteMapping("/{projectId}")
-	public ResponseEntity<?> deleteProject(@PathVariable String projectId) {
+	public ResponseEntity<?> deleteProject(@PathVariable String projectId, Principal principal) {
 		
-		projectService.deleteProjectByIdentifier(projectId);
+		projectService.deleteProjectByIdentifier(projectId, principal.getName());
 		
 		return new ResponseEntity<String>("Project with ID: '" + projectId + "' was deleted.", HttpStatus.OK) ;
 		
