@@ -62,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(SecurityConstants.SIGN_UP_URL).permitAll()
 			.antMatchers(SecurityConstants.H2_URL).permitAll()
 			.anyRequest().authenticated();
-		
+
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 
